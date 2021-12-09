@@ -18,50 +18,14 @@
 
 class m8f_hn_EventHandler : hn_InitializedEventHandler
 {
-  // public: // override section ///////////////////////////////////////////////
 
-  override
-  void PlayerEntered(PlayerEvent event)
-  {
-    if (event.playerNumber != consolePlayer) { return; }
-
-    init();
-
-    Actor playerActor = players[event.playerNumber].mo;
-    if (playerActor == null) { return; }
-
-    _data       = hn_CompassData.from();
-    _isTitlemap = hn_Level.isTitlemap();
-    _settings   = m8f_hn_Settings.from();
-
-    _progress    = 0;
-    _oldProgress = 0;
-    _initialFoundSectorsCount = 0;
-
-    if (_settings.revealOnStart())
-    {
-      playerActor.GiveInventory("MapRevealer", 1);
-
-      if (_settings.scannerOnStart())
-      {
-        playerActor.GiveInventory("m8f_hn_Scanner", 1);
-      }
-    }
-
-    if (_settings.nTranslocator())
-    {
-      playerActor.GiveInventory("m8f_hn_EntrywayTranslocator", _settings.nTranslocator());
-    }
-
-    if (_settings.nTunneling())
-    {
-      playerActor.GiveInventory("m8f_hn_SpaceTunnelingDevice", _settings.nTunneling());
-    }
-  }
+// EventHandler implementation /////////////////////////////////////////////////////////////////////
 
   override
   void WorldTick()
   {
+    if (!isInitialized()) return;
+
     if (level.time == 1)
       {
         _isWorldLoaded            = true;
@@ -71,7 +35,7 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
     int  updatePeriod = 35;
     bool isSkip       = (level.time % updatePeriod);
 
-    if (!isSkip) { return; }
+    if (!isSkip) return;
 
     int nSectors = level.sectors.size() - _initialFoundSectorsCount;
     if (nSectors == 0)
@@ -97,11 +61,11 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
   }
 
   override
-  void WorldThingSpawned(WorldEvent e)
+  void WorldThingSpawned(WorldEvent event)
   {
-    if (e == null) { return; }
+    if (event == null) { return; }
 
-    Actor item = e.thing;
+    Actor item = event.thing;
     if (item == null) { return; }
 
     // detect and store area name markers
@@ -152,7 +116,7 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
   override
   void RenderOverlay(RenderEvent e)
   {
-    if (_isTitlemap) { return; }
+    if (!isInitialized()) { return; }
     if (automapActive && !_settings.showOnAutomap()) { return; }
 
     PlayerInfo player = players[consolePlayer];
@@ -210,27 +174,27 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
 
     if (_settings.levelName())
     {
-      y += drawTextCenter(level.levelName, normalColor, scale, x, y, font)
+      y += hn_UI.drawTextCenter(level.levelName, hn_UI.TEXT_COLOR, scale, x, y, font)
         * drawDirection;
     }
 
     if (_settings.showExplored())
     {
       string progress = String.Format("Explored: %d/10", _progress);
-      y += drawTextCenter(progress, normalColor, scale, x, y, font)
+      y += hn_UI.drawTextCenter(progress, hn_UI.TEXT_COLOR, scale, x, y, font)
         * drawDirection;
     }
 
     if (_settings.showAreaName() && _areaName.length() != 0)
     {
-      y += drawTextCenter(_areaName, normalColor, scale, x, y, font)
+      y += hn_UI.drawTextCenter(_areaName, hn_UI.TEXT_COLOR, scale, x, y, font)
         * drawDirection;
     }
 
     if (_settings.showGridCoords())
     {
       string coords = makeGridCoordinates(pos);
-      y += drawTextCenter(coords, normalColor, scale, x, y, font)
+      y += hn_UI.drawTextCenter(coords, hn_UI.TEXT_COLOR, scale, x, y, font)
         * drawDirection;
     }
 
@@ -238,10 +202,10 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
     MaybeDrawSpeed(player);
   }
 
-  // private: //////////////////////////////////////////////////////////////////
+// hn_InitializedEventHandler implementation ///////////////////////////////////////////////////////
 
-  private
-  void init()
+  override
+  void initialize()
   {
     _areaNameSources.push(new("hn_SignCompassAreaNameSource"       ));
     _areaNameSources.push(new("hn_PlayerStartCompassAreaNameSource"));
@@ -262,7 +226,39 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
     _mapNameAlpha       = 1.5;
 
     _compassSettings = hn_CompassSettings.from();
+
+
+    _data       = hn_CompassData.from();
+    _settings   = m8f_hn_Settings.from();
+
+    _progress    = 0;
+    _oldProgress = 0;
+    _initialFoundSectorsCount = 0;
+
+    Actor playerActor = players[consolePlayer].mo;
+
+    if (_settings.revealOnStart())
+    {
+      playerActor.GiveInventory("MapRevealer", 1);
+
+      if (_settings.scannerOnStart())
+      {
+        playerActor.GiveInventory("m8f_hn_Scanner", 1);
+      }
+    }
+
+    if (_settings.nTranslocator())
+    {
+      playerActor.GiveInventory("m8f_hn_EntrywayTranslocator", _settings.nTranslocator());
+    }
+
+    if (_settings.nTunneling())
+    {
+      playerActor.GiveInventory("m8f_hn_SpaceTunnelingDevice", _settings.nTunneling());
+    }
   }
+
+// private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private ui
   void MaybeDrawMapName()
@@ -275,7 +271,7 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
       double y       = 0.2;
       string mapName = level.levelName;
 
-      drawTextCenter(mapName, Font.CR_RED, scale, x, y, font, 0, _mapNameAlpha);
+      hn_UI.drawTextCenter(mapName, Font.CR_RED, scale, x, y, font, 0, _mapNameAlpha);
     }
 
     setMapNameAlpha(_mapNameAlpha - 0.005);
@@ -381,7 +377,7 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
 
     double currentLockAlpha = _currentLockAlphaPercent * 0.01;
 
-    drawTextCenter(_lockMessage, _lockColor, scale, x, y, font, 0, currentLockAlpha);
+    hn_UI.drawTextCenter(_lockMessage, _lockColor, scale, x, y, font, 0, currentLockAlpha);
 
     // todo: remote activation?
 
@@ -420,7 +416,7 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
     _areaName = name;
   }
 
-  // private: // static section ////////////////////////////////////////////////
+// private: // static section //////////////////////////////////////////////////////////////////////
 
   private static
   bool contains(String s, String substring)
@@ -470,48 +466,18 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
 
     string result = "";
     while (true)
-      {
-        int small = value % 26;
-        result    = String.Format("%c%s", 65 + small, result);
-        value    /= 26;
+    {
+      int small = value % 26;
+      result    = String.Format("%c%s", 65 + small, result);
+      value    /= 26;
 
-        if (value == 0) break;
-        --value;
-      }
+      if (value == 0) break;
+      --value;
+    }
 
     if (negative) { result = String.Format("-%s", result); }
 
     return result;
-  }
-
-  private ui static
-  double drawTextCenter( string text
-                       , int    color
-                       , double scale
-                       , double x
-                       , double y
-                       , Font   font
-                       , int    xAdjustment = 0
-                       , double alpha = 1.0
-                       )
-  {
-    int    width       = int(scale * Screen.GetWidth());
-    int    height      = int(scale * Screen.GetHeight());
-    double stringWidth = font.StringWidth(text);
-    x  = (width * x) - stringWidth / 2;
-    y *= height;
-    double margin = 4.0;
-    if      (x < margin)                       { x = margin; }
-    else if (x > width - stringWidth - margin) { x = width - stringWidth - margin; }
-
-    Screen.DrawText( font, color, x, y, text
-                   , DTA_KeepRatio,     true
-                   , DTA_VirtualWidth,  width
-                   , DTA_VirtualHeight, height
-                   , DTA_Alpha,         alpha
-                   );
-
-    return (font.GetHeight() / scale) / Screen.GetHeight();
   }
 
   private static
@@ -583,8 +549,8 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
     double y        = _settings.speedometerY();
     double x        = _settings.speedometerX();
 
-    y += drawTextCenter(speedLevel, normalColor, scale, x, y, smallfont);
-    drawTextCenter(speedStr, normalColor, scale, x, y, smallfont);
+    y += hn_UI.drawTextCenter(speedLevel, hn_UI.TEXT_COLOR, scale, x, y, smallfont);
+    hn_UI.drawTextCenter(speedStr, hn_UI.TEXT_COLOR, scale, x, y, smallfont);
   }
 
   private
@@ -609,7 +575,7 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
     //thing.Vel.Z = 0.;//5.0;
   }
 
-  // private: //////////////////////////////////////////////////////////////////
+// private: ////////////////////////////////////////////////////////////////////////////////////////
 
   private Array<hn_BaseCompassAreaNameSource> _areaNameSources;
   private hn_CompassData     _data;
@@ -620,7 +586,6 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
   private int     _renderUpdatePeriod;
   private int     _renderCounter;
   private string  _areaName;
-  private bool    _isTitlemap;
   private int     _progress;
   private int     _oldProgress;
   private int     _initialFoundSectorsCount;
@@ -636,9 +601,5 @@ class m8f_hn_EventHandler : hn_InitializedEventHandler
   private bool    _isMapRevealerOnMap;
 
   private double  _mapNameAlpha;
-
-  // const section
-
-  const normalcolor = Font.CR_GRAY;
 
 } // class m8f_hn_EventHandler

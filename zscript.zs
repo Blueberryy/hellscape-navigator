@@ -40,6 +40,7 @@ version "3.2.0"
 #include "zscript/utils/hn_Level.zs"
 #include "zscript/utils/hn_DistanceCalculator.zs"
 #include "zscript/utils/hn_InitializedEventHandler.zs"
+#include "zscript/utils/hn_UI.zs"
 
 // Settings ////////////////////////////////////////////////////////////////////
 
