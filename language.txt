@@ -121,3 +121,96 @@ m8f_hn_remove_signs     = "Remove all signs";
 m8f_hn_new_sign         = "New Sign";
 m8f_hn_options          = "Options";
 m8f_hn_remove_sign_note = "Shoot below sign to remove it.";
+
+[ru]
+
+// Doom
+
+GOTBLUECARD = "\chПолучена синяя ключ-карта.";
+GOTYELWCARD = "\ckПолучена жёлтая ключ-карта.";
+GOTREDCARD  = "\cgПолучена красная ключ-карта.";
+
+GOTBLUESKUL = "\chПолучен синий череп-ключ.";
+GOTYELWSKUL = "\ckПолучен жёлтый череп-ключ.";
+GOTREDSKUL  = "\cgПолучен красный череп-ключ.";
+
+PD_BLUEO    = "\chНужен синий ключ!";
+PD_REDO     = "\cgНужен красный ключ!";
+PD_YELLOWO  = "\ckНужен жёлтый ключ!";
+
+PD_BLUEK    = "\chНужен синий ключ!";
+PD_REDK     = "\cgНужен красный ключ!";
+PD_YELLOWK  = "\ckНужен синий ключ!";
+
+PD_BLUECO   = "\chНужна синяя карта!";
+PD_REDCO    = "\cgНужна красная карта!";
+PD_YELLOWCO = "\ckНужна жёлтая карта!";
+
+PD_BLUESO   = "\chНужен синий череп!";
+PD_REDSO    = "\cgНужен красный череп!";
+PD_YELLOWSO = "\ckНужен жёлтый череп!";
+
+// Heretic
+
+TXT_NEEDBLUEKEY   = "Для открытия нужен \chсиний ключ\c-";
+TXT_NEEDGREENKEY  = "Для открытия нужен \cdзелёный ключ\c-";
+TXT_NEEDYELLOWKEY = "Для открытия нужен \ckжёлтый ключ\c-";
+
+TXT_GOTBLUEKEY    = "\chСиний ключ";
+TXT_GOTYELLOWKEY  = "\ckЖёлтый ключ";
+TXT_GOTGREENKEY   = "\cdЗелёный ключ";
+
+// Hexen
+
+TXT_KEY_STEEL   = "\ccСтальной ключ";
+Txt_Key_Cave    = "\csПещерный ключ";
+Txt_Key_Axe     = "\cuТопор-ключ";
+Txt_Key_Fire    = "\cgОгненный ключ";
+Txt_Key_Emerald = "\cdИзумрудный ключ";
+Txt_Key_Dungeon = "\cuКлюч от подземелья";
+Txt_Key_Silver  = "\cjСеребряный ключ";
+Txt_Key_Rusted  = "\ceРжавый ключ";
+Txt_Key_Horn    = "\ceРоговой ключ";
+Txt_Key_Swamp   = "\cpБолотный ключ";
+Txt_Key_Castle  = "\cfКлюч от замка";
+
+Txt_Need_Key_Steel   = "Нужен \ccстальной ключ";
+Txt_Need_Key_Cave    = "Нужен \csпещерный ключ";
+Txt_Need_Key_Axe     = "Нужен \cuключ-топор";
+Txt_Need_Key_Fire    = "Нужен \cgогненный ключ";
+Txt_Need_Key_Emerald = "Нужен \cdизумрудный ключ";
+Txt_Need_Key_Dungeon = "Нужен \cuключ от подземелья";
+Txt_Need_Key_Silver  = "Нужен \cjсеребряный ключ";
+Txt_Need_Key_Rusted  = "Нужен \ceржавый ключ";
+Txt_Need_Key_Horn    = "Нужен \ceроговой ключ";
+Txt_Need_Key_Swamp   = "Нужен \cpболотный ключ";
+Txt_Need_Key_Castle  = "Нужен \cfключ от замка";
+
+// CVar descriptions
+
+m8f_hn_sign_note1            = "Заметка:";
+m8f_hn_sign_note2            = ":";
+m8f_hn_sign_note3            = ":";
+
+m8f_hn_area_name             = "Имя области";
+m8f_hn_area_radius           = "Радиус области";
+m8f_hn_sign_type             = "Тип таблички";
+m8f_hn_sign_clear_after_make = "Очистить заметку о при завершении";
+
+m8f_hn_sign_add_time         = "Добавить время уровня в заметку";
+m8f_hn_sign_shootable        = "Сделать эту табличку разрушаемой";
+m8f_hn_sign_with_pointer     = "Добавить к компасу";
+m8f_hn_sign_map_scale        = "Размер маркера таблички на автокарте";
+
+// Command descriptions
+
+m8f_hn_make_sign_close  = "Готово";
+m8f_hn_make_sign_cancel = "Отмена";
+m8f_hn_make_sign_clear  = "Очистить заметку сейчас";
+m8f_hn_remove_signs     = "Убрать все таблички";
+
+// Menu strings
+
+m8f_hn_new_sign         = "Новая табличка";
+m8f_hn_options          = "Настройки";
+m8f_hn_remove_sign_note = "Стреляйте ниже таблички, чтобы убрать её.";
